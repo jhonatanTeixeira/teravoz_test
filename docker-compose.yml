@@ -1,0 +1,26 @@
+version: '3.1'
+
+services:
+  mysq1:
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: teravoz_test
+    ports:
+      - 3306:1111
+
+  sandbox:
+    image: jamesdbloom/mockserver
+
+  nodejs:
+    build: .
+    links:
+      - mysq1:database
+      - sandbox:api.teravoz.com.br
+    volumes:
+      - /app
+    ports:
+      - 3000:3000
+
